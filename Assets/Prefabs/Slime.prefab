@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9009012672970509345, guid: 2a2934bf37057451f817e19165891f90, type: 3}
       propertyPath: m_Name
-      value: Dummy Variant
+      value: Slime
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -122,6 +122,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   hp: 15
   def: 0
+  dropTable:
+    dropList:
+    - itemName: Slime Gel
+      amount: 1
+      chance: 100
+  pickupPrefab: {fileID: 3990546141863274945, guid: a64f85d837a8904428198a58ee4bab92, type: 3}
   atk: 1
   moveSpeed: 2
   attackRange: 1.2

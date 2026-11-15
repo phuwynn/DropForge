@@ -724,8 +724,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   slimePrefab: {fileID: 1120898448891799526, guid: 9f9f6d1ebc5a75949a1ec01858510bec, type: 3}
-  zombiePrefab: {fileID: 0}
-  skeletonPrefab: {fileID: 0}
+  zombiePrefab: {fileID: 1104204236357270881, guid: 56c02676dad86f948a5491cb10fac169, type: 3}
+  skeletonPrefab: {fileID: 6555542374920962470, guid: d4e9ebeb8a1797b4ca96a2a38c4b70e2, type: 3}
   slimeCount: 5
   zombieCount: 7
   skeletonCount: 3

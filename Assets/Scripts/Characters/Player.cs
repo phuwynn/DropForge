@@ -123,4 +123,17 @@ public class Player : MonoBehaviour
     {
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
+
+        // temporary HUD (we will make a real UI later)
+    void OnGUI()
+    {
+        GUI.skin.label.fontSize = 18;
+        GUI.Label(new Rect(10, 10, 400, 30), "HP: " + hp + "/" + maxHp);
+
+        for (int i = 0; i < inventory.slots.Count; i++)
+        {
+            string text = inventory.slots[i].itemName + " x " + inventory.slots[i].amount;
+            GUI.Label(new Rect(10, 40 + i * 25, 400, 30), text);
+        }
+    }
 }
