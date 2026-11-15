@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
     public float attackRange = 1.5f;
     public float attackCooldown = 0.5f;
     public Inventory inventory = new Inventory();
+    public List<string> equippedItems = new List<string>();
 
     Rigidbody2D rb;
     Vector2 moveInput;
@@ -23,6 +25,12 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        // game is paused (crafting menu is open) = do nothing
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+
         Keyboard kb = Keyboard.current;
         if (kb == null)
         {
@@ -118,22 +126,51 @@ public class Player : MonoBehaviour
         inventory.Add(itemName, amount);
     }
 
+    public void Equip(string itemName, int atkBonus, int defBonus)
+    {
+        // [1] already wearing it = do nothing
+        if (IsEquipped(itemName))
+        {
+            return;
+        }
+
+        // [2] remember it and add the bonus to our stats
+        equippedItems.Add(itemName);
+        atk = atk + atkBonus;
+        def = def + defBonus;
+        Debug.Log("Equip " + itemName + " : ATK " + atk + " DEF " + def);
+    }
+
+    // sequential search, true if we are wearing this item
+    public bool IsEquipped(string itemName)
+    {
+        for (int i = 0; i < equippedItems.Count; i++)
+        {
+            if (equippedItems[i] == itemName)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // draw the attack range in the Scene view (when Player is selected)
     void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-        // temporary HUD (we will make a real UI later)
+    // temporary HUD (we will make a real UI later)
     void OnGUI()
     {
         GUI.skin.label.fontSize = 18;
         GUI.Label(new Rect(10, 10, 400, 30), "HP: " + hp + "/" + maxHp);
+        GUI.Label(new Rect(10, 35, 400, 30), "ATK: " + atk + "   DEF: " + def);
 
         for (int i = 0; i < inventory.slots.Count; i++)
         {
             string text = inventory.slots[i].itemName + " x " + inventory.slots[i].amount;
-            GUI.Label(new Rect(10, 40 + i * 25, 400, 30), text);
+            GUI.Label(new Rect(10, 70 + i * 25, 400, 30), text);
         }
     }
 }

@@ -19,6 +19,12 @@ public class Enemy : Destructible
 
     void Update()
     {
+        // game is paused (crafting menu is open) = do nothing
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+
         if (player == null)
         {
             return;
