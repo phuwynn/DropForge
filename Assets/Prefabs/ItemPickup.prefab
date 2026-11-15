@@ -147,5 +147,5 @@ MonoBehaviour:
   boneSprite: {fileID: 4056058344551517612, guid: 25351d2df9048e14eaf777550f3c4c2a, type: 3}
   hideSprite: {fileID: -5409552257397737557, guid: a14da5f5a93940c4489c0dd8e52e6713, type: 3}
   slimeGelSprite: {fileID: -7647868525326460276, guid: 99020ca8d34a62b4a9855490746ddb4d, type: 3}
-  cottonSprite: {fileID: 0}
-  ironOreSprite: {fileID: 0}
+  cottonSprite: {fileID: 3370835481429039019, guid: 52b47d2f9cbcb1f4ba83b58368f4af96, type: 3}
+  ironOreSprite: {fileID: 3615109535770239713, guid: 75ef273e740ff9c4c981d4996875bcdf, type: 3}

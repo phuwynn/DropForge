@@ -147,9 +147,11 @@ public class CraftingSystem : MonoBehaviour
         return true;
     }
 
-    // ---------- menu (temporary UI for the draft) ----------
+        // ---------- menu (temporary UI for the draft) ----------
 
-    void MakeStyles()
+    GUIStyle grayStyle;
+
+        void MakeStyles()
     {
         if (normalStyle != null)
         {
@@ -157,20 +159,49 @@ public class CraftingSystem : MonoBehaviour
         }
 
         titleStyle = new GUIStyle(GUI.skin.label);
-        titleStyle.fontSize = 24;
+        titleStyle.fontSize = 26;
         titleStyle.fontStyle = FontStyle.Bold;
+        titleStyle.wordWrap = false;
+        LockColor(titleStyle, Color.white);
 
         normalStyle = new GUIStyle(GUI.skin.label);
         normalStyle.fontSize = 15;
+        normalStyle.wordWrap = false;
+        normalStyle.alignment = TextAnchor.MiddleLeft;
+        LockColor(normalStyle, Color.white);
+
+        grayStyle = new GUIStyle(normalStyle);
+        LockColor(grayStyle, new Color(0.7f, 0.7f, 0.7f));
 
         greenStyle = new GUIStyle(normalStyle);
-        greenStyle.normal.textColor = Color.green;
+        LockColor(greenStyle, new Color(0.4f, 1f, 0.4f));
 
         redStyle = new GUIStyle(normalStyle);
-        redStyle.normal.textColor = Color.red;
+        LockColor(redStyle, new Color(1f, 0.4f, 0.4f));
 
         buttonStyle = new GUIStyle(GUI.skin.button);
         buttonStyle.fontSize = 15;
+    }
+
+    // set the same text color for every state (so hover does not change the color)
+    void LockColor(GUIStyle style, Color color)
+    {
+        style.normal.textColor = color;
+        style.hover.textColor = color;
+        style.active.textColor = color;
+        style.focused.textColor = color;
+        style.onNormal.textColor = color;
+        style.onHover.textColor = color;
+        style.onActive.textColor = color;
+        style.onFocused.textColor = color;
+    }
+
+    // draw a solid color rectangle
+    void DrawRect(Rect rect, Color color)
+    {
+        GUI.color = color;
+        GUI.DrawTexture(rect, Texture2D.whiteTexture);
+        GUI.color = Color.white;
     }
 
     void OnGUI()
@@ -181,48 +212,80 @@ public class CraftingSystem : MonoBehaviour
         }
         MakeStyles();
 
-        GUILayout.BeginArea(new Rect(Screen.width / 2 - 380, 40, 760, Screen.height - 80), GUI.skin.box);
-        GUILayout.Label("CRAFTING   (press C to close)", titleStyle);
-        GUILayout.Label("Can craft now: " + GetCraftable().Count, normalStyle);
+        // [1] dark screen so the game behind the menu is hard to see
+        DrawRect(new Rect(0, 0, Screen.width, Screen.height), new Color(0, 0, 0, 0.7f));
 
-        // [1] parts
-        GUILayout.Label("---- Parts ----", normalStyle);
+        // [2] the menu panel
+        float panelW = 900;
+        float panelH = 460;
+        float x0 = (Screen.width - panelW) / 2;
+        float y0 = (Screen.height - panelH) / 2;
+        if (y0 < 10)
+        {
+            y0 = 10;
+        }
+        DrawRect(new Rect(x0, y0, panelW, panelH), new Color(0.1f, 0.12f, 0.18f, 1f));
+
+        // [3] title
+        GUI.Label(new Rect(x0 + 20, y0 + 10, 600, 36), "CRAFTING", titleStyle);
+        GUI.Label(new Rect(x0 + 20, y0 + 46, 860, 24), "Can craft now: " + GetCraftable().Count + "     (press C to close, or press the number key to craft)", grayStyle);
+
+        float y = y0 + 80;
+        float rowHeight = 42;
+
+        // [4] parts
+        DrawSectionHeader("PARTS", x0, y, panelW);
+        y = y + 28;
         for (int i = 0; i < recipes.Count; i++)
         {
             if (recipes[i].isEquipment == false)
             {
-                DrawRecipe(recipes[i], i);
+                DrawRecipe(recipes[i], i, x0, y);
+                y = y + rowHeight;
             }
         }
 
-        // [2] equipment
-        GUILayout.Label("---- Equipment ----", normalStyle);
+        // [5] equipment
+        DrawSectionHeader("EQUIPMENT", x0, y, panelW);
+        y = y + 28;
         for (int i = 0; i < recipes.Count; i++)
         {
             if (recipes[i].isEquipment)
             {
-                DrawRecipe(recipes[i], i);
+                DrawRecipe(recipes[i], i, x0, y);
+                y = y + rowHeight;
             }
         }
 
-        GUILayout.EndArea();
+        // line under the last row
+        DrawRect(new Rect(x0 + 10, y, panelW - 20, 1), new Color(1, 1, 1, 0.3f));
     }
 
-    void DrawRecipe(Recipe r, int number)
+    void DrawSectionHeader(string text, float x0, float y, float panelW)
     {
-        GUILayout.BeginHorizontal();
+        DrawRect(new Rect(x0 + 10, y, panelW - 20, 26), new Color(1, 1, 1, 0.12f));
+        GUI.Label(new Rect(x0 + 20, y, 300, 26), text, grayStyle);
+    }
 
-        // name and bonus
+    void DrawRecipe(Recipe r, int number, float x0, float y)
+    {
+        // line on top of the row
+        DrawRect(new Rect(x0 + 10, y, 880, 1), new Color(1, 1, 1, 0.3f));
+
+        // name
+        GUI.Label(new Rect(x0 + 20, y, 160, 42), (number + 1) + ". " + r.resultName, normalStyle);
+
+        // bonus
         string bonusText = "";
         if (r.atkBonus > 0)
         {
-            bonusText = " (ATK +" + r.atkBonus + ")";
+            bonusText = "ATK +" + r.atkBonus;
         }
         if (r.defBonus > 0)
         {
-            bonusText = " (DEF +" + r.defBonus + ")";
+            bonusText = "DEF +" + r.defBonus;
         }
-        GUILayout.Label((number + 1) + ". " + r.resultName + bonusText, normalStyle, GUILayout.Width(190));
+        GUI.Label(new Rect(x0 + 180, y, 80, 42), bonusText, grayStyle);
 
         // ingredients: green = enough, red = not enough
         for (int i = 0; i < r.ingredientNames.Length; i++)
@@ -239,25 +302,23 @@ public class CraftingSystem : MonoBehaviour
             {
                 style = greenStyle;
             }
-            GUILayout.Label(r.ingredientNames[i] + " " + have + "/" + r.ingredientAmounts[i], style, GUILayout.Width(105));
+            string text = r.ingredientNames[i] + " " + have + "/" + r.ingredientAmounts[i];
+            GUI.Label(new Rect(x0 + 270 + i * 130, y, 130, 42), text, style);
         }
-        GUILayout.FlexibleSpace();
 
-        // button
+        // button (or "Crafted" for equipment that we already have)
         if (r.isEquipment && player.IsEquipped(r.resultName))
         {
-            GUILayout.Label("Crafted", greenStyle, GUILayout.Width(80));
+            GUI.Label(new Rect(x0 + 800, y, 80, 42), "Crafted", greenStyle);
         }
         else
         {
             GUI.enabled = CanCraft(r);
-            if (GUILayout.Button("Craft", buttonStyle, GUILayout.Width(80)))
+            if (GUI.Button(new Rect(x0 + 800, y + 6, 80, 30), "Craft", buttonStyle))
             {
                 craftRequest = r;
             }
             GUI.enabled = true;
         }
-
-        GUILayout.EndHorizontal();
     }
 }
