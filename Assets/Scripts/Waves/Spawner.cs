@@ -10,7 +10,13 @@ public class Spawner : MonoBehaviour
     public int zombieCount = 7;
     public int skeletonCount = 3;
 
-    // the area where enemies can appear
+    // resource nodes (wave 1 only)
+    public ResourceNode ironOrePrefab;
+    public ResourceNode cottonPrefab;
+    public int ironOreCount = 7;
+    public int cottonCount = 5;
+
+    // the area where things can appear
     public float minX = -8f;
     public float maxX = 8f;
     public float minY = -4f;
@@ -49,6 +55,10 @@ public class Spawner : MonoBehaviour
             AddToQueue(slimePrefab, slimeCount);
             AddToQueue(zombiePrefab, zombieCount);
             AddToQueue(skeletonPrefab, skeletonCount);
+
+            // nodes are not enemies, so they are not counted in the return value
+            SpawnNodes(ironOrePrefab, ironOreCount);
+            SpawnNodes(cottonPrefab, cottonCount);
         }
         else
         {
@@ -69,6 +79,20 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             spawnQueue.Enqueue(prefab);
+        }
+    }
+
+    void SpawnNodes(ResourceNode prefab, int count)
+    {
+        // no prefab = skip
+        if (prefab == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            Instantiate(prefab, GetRandomPosition(), Quaternion.identity);
         }
     }
 

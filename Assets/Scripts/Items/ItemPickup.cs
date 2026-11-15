@@ -5,34 +5,60 @@ public class ItemPickup : MonoBehaviour
     public string itemName;
     public int amount = 1;
 
+    // pictures for each item (leave empty = use a colored circle)
+    public Sprite boneSprite;
+    public Sprite hideSprite;
+    public Sprite slimeGelSprite;
+    public Sprite cottonSprite;
+    public Sprite ironOreSprite;
+
     void Start()
     {
-        // change the color by item name so we can tell them apart
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         if (sr == null)
         {
             return;
         }
 
+        // [1] choose the picture by item name
+        Sprite picture = null;
+        Color color = Color.white;
+
         if (itemName == "Bone")
         {
-            sr.color = Color.white;
+            picture = boneSprite;
+            color = Color.white;
         }
         else if (itemName == "Hide")
         {
-            sr.color = new Color(0.6f, 0.4f, 0.2f);
+            picture = hideSprite;
+            color = new Color(0.6f, 0.4f, 0.2f);
         }
         else if (itemName == "Slime Gel")
         {
-            sr.color = Color.green;
+            picture = slimeGelSprite;
+            color = Color.green;
         }
         else if (itemName == "Cotton")
         {
-            sr.color = new Color(1f, 0.8f, 0.9f);
+            picture = cottonSprite;
+            color = new Color(1f, 0.8f, 0.9f);
         }
         else if (itemName == "Iron Ore")
         {
-            sr.color = Color.gray;
+            picture = ironOreSprite;
+            color = Color.gray;
+        }
+
+        // [2] have a picture = use it, no picture = keep the circle with a color
+        if (picture != null)
+        {
+            sr.sprite = picture;
+            sr.color = Color.white;
+        }
+        else
+        {
+            sr.color = color;
         }
     }
 
