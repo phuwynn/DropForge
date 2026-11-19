@@ -16,6 +16,11 @@ public class Spawner : MonoBehaviour
     public int ironOreCount = 7;
     public int cottonCount = 5;
 
+    // wave 2
+    public Boss bossPrefab;
+    public Enemy minionPrefab;
+    public int minionCount = 3;
+
     // the area where things can appear
     public float minX = -8f;
     public float maxX = 8f;
@@ -60,6 +65,15 @@ public class Spawner : MonoBehaviour
             SpawnNodes(ironOrePrefab, ironOreCount);
             SpawnNodes(cottonPrefab, cottonCount);
         }
+        else if (wave == 2)
+        {
+            // [1] wave 2 has no resources, remove the nodes that are left
+            ClearNodes();
+
+            // [2] the boss comes first, then the minions
+            AddToQueue(bossPrefab, 1);
+            AddToQueue(minionPrefab, minionCount);
+        }
         else
         {
             Debug.Log("Wave " + wave + " is not set yet");
@@ -93,6 +107,15 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             Instantiate(prefab, GetRandomPosition(), Quaternion.identity);
+        }
+    }
+
+    void ClearNodes()
+    {
+        ResourceNode[] nodes = FindObjectsByType<ResourceNode>(FindObjectsSortMode.None);
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            Destroy(nodes[i].gameObject);
         }
     }
 

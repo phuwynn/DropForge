@@ -42,6 +42,12 @@ public class CraftingSystem : MonoBehaviour
             return;
         }
 
+        // game is over (paused but our menu is not open) = do nothing
+        if (Time.timeScale == 0 && isOpen == false)
+        {
+            return;
+        }
+
         // [1] press C to open or close the menu
         if (kb.cKey.wasPressedThisFrame)
         {

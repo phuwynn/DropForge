@@ -114,10 +114,14 @@ public class Player : MonoBehaviour
         }
         Debug.Log("Player hp = " + hp);
 
-        // [3] hp is 0 = player is dead (GameManager will handle this later)
+        // hp is 0 = tell GameManager that we lost
         if (hp == 0)
         {
-            Debug.Log("Player died");
+            GameManager gm = FindFirstObjectByType<GameManager>();
+            if (gm != null)
+            {
+                gm.Lose();
+            }
         }
     }
 

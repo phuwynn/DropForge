@@ -769,6 +769,9 @@ MonoBehaviour:
   cottonPrefab: {fileID: 8589991176033452225, guid: 9092c8355b19348488e884a11abd4bc8, type: 3}
   ironOreCount: 7
   cottonCount: 5
+  bossPrefab: {fileID: 6940945253644108946, guid: bc468c59d85fd5b42b8e8ba3ce4ecff7, type: 3}
+  minionPrefab: {fileID: 2436605686412132459, guid: f75473932b15fbc4cabe100ce55443ab, type: 3}
+  minionCount: 3
   minX: -8
   maxX: 8
   minY: -4
@@ -790,6 +793,7 @@ MonoBehaviour:
   currentWave: 0
   maxWave: 2
   aliveEnemies: 0
+  waveCleared: 0
 --- !u!4 &654702411
 Transform:
   m_ObjectHideFlags: 0
@@ -846,6 +850,51 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.06078, y: -0.71577, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1006764775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1006764777}
+  - component: {fileID: 1006764776}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1006764776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006764775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da50724ca06c0bf4c820db984a36490e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  state: 0
+--- !u!4 &1006764777
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006764775}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1017,3 +1066,4 @@ SceneRoots:
   - {fileID: 654702411}
   - {fileID: 134303837}
   - {fileID: 947508786}
+  - {fileID: 1006764777}
