@@ -20,18 +20,18 @@ public class CraftingSystem : MonoBehaviour
     {
         player = FindFirstObjectByType<Player>();
 
-        // [1] step 1: raw materials -> parts
-        recipes.Add(new Recipe("Iron Plate", false, new string[] { "Iron Ore" }, new int[] { 2 }, 0, 0));
-        recipes.Add(new Recipe("Cloth", false, new string[] { "Cotton" }, new int[] { 2 }, 0, 0));
+        // step 1: raw materials -> components
+        recipes.Add(new Recipe("Iron Plate", new string[] { "Iron Ore" }, new int[] { 2 }));
+        recipes.Add(new Recipe("Cloth", new string[] { "Cotton" }, new int[] { 2 }));
 
-        // [2] step 2: materials + parts -> sword handle
-        recipes.Add(new Recipe("Sword Handle", false, new string[] { "Bone", "Hide", "Slime Gel", "Cloth" }, new int[] { 2, 1, 1, 1 }, 0, 0));
+        // step 2: materials + components -> sword handle
+        recipes.Add(new Recipe("Sword Handle", new string[] { "Bone", "Hide", "Slime Gel", "Cloth" }, new int[] { 2, 1, 1, 1 }));
 
-        // [3] step 3: parts + materials -> equipment
-        recipes.Add(new Recipe("Sword", true, new string[] { "Iron Plate", "Sword Handle" }, new int[] { 2, 1 }, 15, 0));
-        recipes.Add(new Recipe("Chestplate", true, new string[] { "Iron Plate", "Hide", "Cloth", "Slime Gel" }, new int[] { 2, 2, 1, 1 }, 0, 10));
-        recipes.Add(new Recipe("Leggings", true, new string[] { "Iron Plate", "Hide", "Cloth", "Slime Gel" }, new int[] { 1, 2, 1, 1 }, 0, 8));
-        recipes.Add(new Recipe("Helmet", true, new string[] { "Iron Plate", "Hide", "Cloth", "Slime Gel" }, new int[] { 1, 1, 1, 1 }, 0, 6));
+        // step 3: components + materials -> equipment
+        recipes.Add(new Recipe("Sword", new string[] { "Iron Plate", "Sword Handle" }, new int[] { 2, 1 }));
+        recipes.Add(new Recipe("Chestplate", new string[] { "Iron Plate", "Hide", "Cloth", "Slime Gel" }, new int[] { 2, 2, 1, 1 }));
+        recipes.Add(new Recipe("Leggings", new string[] { "Iron Plate", "Hide", "Cloth", "Slime Gel" }, new int[] { 1, 2, 1, 1 }));
+        recipes.Add(new Recipe("Helmet", new string[] { "Iron Plate", "Hide", "Cloth", "Slime Gel" }, new int[] { 1, 1, 1, 1 }));
     }
 
     void Update()
@@ -141,14 +141,15 @@ public class CraftingSystem : MonoBehaviour
             player.inventory.Remove(recipe.ingredientNames[i], recipe.ingredientAmounts[i]);
         }
 
-        // [2] equipment = wear it, part = put it in the inventory
-        if (recipe.isEquipment)
+        // equipment = wear it, anything else = put it in the inventory
+        EquipmentItem equipment = recipe.result as EquipmentItem;
+        if (equipment != null)
         {
-            player.Equip(recipe.resultName, recipe.atkBonus, recipe.defBonus);
+            player.Equip(equipment);
         }
         else
         {
-            player.Pickup(recipe.resultName, 1);
+            player.inventory.Add(recipe.result, 1);
         }
         return true;
     }

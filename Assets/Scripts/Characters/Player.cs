@@ -9,14 +9,20 @@ public class Player : MonoBehaviour
     public int maxHp = 100;
     public int atk = 5;
     public int def = 0;
+    public int maxAtk = 20;
+    public int maxDef = 24;
     public float attackRange = 1.5f;
     public float attackCooldown = 0.5f;
     public Inventory inventory = new Inventory();
     public List<string> equippedItems = new List<string>();
+    public string lastHitText = "";
 
     Rigidbody2D rb;
     Vector2 moveInput;
     float attackTimer = 0;
+
+    GUIStyle barTextStyle;
+    GUIStyle hudTextStyle;
 
     void Start()
     {
@@ -25,7 +31,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // game is paused (crafting menu is open) = do nothing
+        // game is paused (menu, bag, door box, win or lose) = do nothing
         if (Time.timeScale == 0)
         {
             return;
@@ -35,6 +41,12 @@ public class Player : MonoBehaviour
         if (kb == null)
         {
             return;
+        }
+
+        // test key (editor only): F2 = take one boss hit (ATK 26)
+        if (DevKeys.Enabled && kb.f2Key.wasPressedThisFrame)
+        {
+            TakeDamage(26);
         }
 
         // [1] read the keys (W A S D or arrow keys)
@@ -112,9 +124,12 @@ public class Player : MonoBehaviour
         {
             hp = 0;
         }
-        Debug.Log("Player hp = " + hp);
 
-        // hp is 0 = tell GameManager that we lost
+        // [3] remember the last hit (only shown in the editor)
+        lastHitText = "Last hit: enemy ATK " + enemyAtk + " - DEF " + def + " = " + damage;
+        Debug.Log(lastHitText + " | HP = " + hp);
+
+        // [4] hp is 0 = tell GameManager that we lost
         if (hp == 0)
         {
             GameManager gm = FindFirstObjectByType<GameManager>();
@@ -128,6 +143,12 @@ public class Player : MonoBehaviour
     public void Pickup(string itemName, int amount)
     {
         inventory.Add(itemName, amount);
+    }
+
+    // wear an EquipmentItem (take the bonus from the Equipment class)
+    public void Equip(EquipmentItem equipment)
+    {
+        Equip(equipment.itemName, equipment.atkBonus, equipment.defBonus);
     }
 
     public void Equip(string itemName, int atkBonus, int defBonus)
@@ -164,17 +185,64 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
-    // temporary HUD (we will make a real UI later)
+    // HUD: HP, DEF, ATK bars at the top-left of the screen
     void OnGUI()
     {
-        GUI.skin.label.fontSize = 18;
-        GUI.Label(new Rect(10, 10, 400, 30), "HP: " + hp + "/" + maxHp);
-        GUI.Label(new Rect(10, 35, 400, 30), "ATK: " + atk + "   DEF: " + def);
+        // draw behind the menus
+        GUI.depth = 1;
 
-        for (int i = 0; i < inventory.slots.Count; i++)
+        // [1] make the styles once
+        if (barTextStyle == null)
         {
-            string text = inventory.slots[i].itemName + " x " + inventory.slots[i].amount;
-            GUI.Label(new Rect(10, 70 + i * 25, 400, 30), text);
+            barTextStyle = new GUIStyle(GUI.skin.label);
+            barTextStyle.fontSize = 14;
+            barTextStyle.fontStyle = FontStyle.Bold;
+            barTextStyle.alignment = TextAnchor.MiddleCenter;
+            barTextStyle.normal.textColor = Color.white;
+
+            hudTextStyle = new GUIStyle(GUI.skin.label);
+            hudTextStyle.fontSize = 16;
+            hudTextStyle.normal.textColor = Color.white;
         }
+
+        // [2] the three bars
+        DrawBar(10, 10, "HP", hp, maxHp, new Color(0.85f, 0.15f, 0.15f));
+        DrawBar(10, 38, "DEF", def, maxDef, new Color(0.2f, 0.5f, 0.9f));
+        DrawBar(10, 66, "ATK", atk, maxAtk, new Color(0.95f, 0.6f, 0.1f));
+
+        // [3] last hit text: only in the editor (it is a test tool, not for players)
+        if (DevKeys.Enabled && lastHitText != "")
+        {
+            GUI.Label(new Rect(10, 98, 600, 28), lastHitText, hudTextStyle);
+        }
+    }
+
+    void DrawBar(float x, float y, string label, int value, int maxValue, Color color)
+    {
+        float w = 220;
+        float h = 22;
+
+        // ratio from 0 to 1
+        float ratio = 0;
+        if (maxValue > 0)
+        {
+            ratio = (float)value / maxValue;
+        }
+        if (ratio > 1)
+        {
+            ratio = 1;
+        }
+        if (ratio < 0)
+        {
+            ratio = 0;
+        }
+
+        // dark background, color bar, then the text on top
+        GUI.color = new Color(0, 0, 0, 0.7f);
+        GUI.DrawTexture(new Rect(x - 2, y - 2, w + 4, h + 4), Texture2D.whiteTexture);
+        GUI.color = color;
+        GUI.DrawTexture(new Rect(x, y, w * ratio, h), Texture2D.whiteTexture);
+        GUI.color = Color.white;
+        GUI.Label(new Rect(x, y, w, h), label + " " + value + " / " + maxValue, barTextStyle);
     }
 }
