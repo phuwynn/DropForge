@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class WaveManager : MonoBehaviour
 {
     public Spawner spawner;
+    public Door door;
     public int currentWave = 0;
     public int maxWave = 2;
     public int aliveEnemies = 0;
@@ -22,17 +23,10 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        // test keys for the draft (the door will replace them later)
-        // K = kill every enemy
-        if (kb.kKey.wasPressedThisFrame)
+        // test key (editor only): K = kill every enemy
+        if (DevKeys.Enabled && kb.kKey.wasPressedThisFrame)
         {
             KillAllEnemies();
-        }
-
-        // N = start the next wave (only after the current wave is cleared)
-        if (kb.nKey.wasPressedThisFrame && waveCleared && currentWave < maxWave)
-        {
-            StartNextWave();
         }
     }
 
@@ -59,13 +53,21 @@ public class WaveManager : MonoBehaviour
             waveCleared = true;
             Debug.Log("Wave " + currentWave + " cleared");
 
-            // [3] the last wave is cleared = the player wins
             if (currentWave >= maxWave)
             {
+                // [3] the last wave is cleared = the player wins
                 GameManager gm = FindFirstObjectByType<GameManager>();
                 if (gm != null)
                 {
                     gm.Win();
+                }
+            }
+            else
+            {
+                // [4] not the last wave = open the door to the next wave
+                if (door != null)
+                {
+                    door.SetOpen(true);
                 }
             }
         }

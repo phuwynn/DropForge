@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         }
 
         // test key for the draft: F3 = show the win screen
-        if (kb.f3Key.wasPressedThisFrame)
+        if (DevKeys.Enabled && kb.f3Key.wasPressedThisFrame)
         {
             Win();
         }
@@ -79,6 +79,19 @@ public class GameManager : MonoBehaviour
         GUI.color = Color.white;
     }
 
+    // set the same text color for every state (so hover does not change the color)
+    void LockColor(GUIStyle style, Color color)
+    {
+        style.normal.textColor = color;
+        style.hover.textColor = color;
+        style.active.textColor = color;
+        style.focused.textColor = color;
+        style.onNormal.textColor = color;
+        style.onHover.textColor = color;
+        style.onActive.textColor = color;
+        style.onFocused.textColor = color;
+    }
+
     // end screen box (temporary UI for the draft)
     void OnGUI()
     {
@@ -122,8 +135,8 @@ public class GameManager : MonoBehaviour
         DrawRect(new Rect(x - 4, y - 4, boxW + 8, boxH + 8), borderColor);
         DrawRect(new Rect(x, y, boxW, boxH), new Color(0.1f, 0.12f, 0.18f, 1f));
 
-        // [4] title text
-        titleStyle.normal.textColor = borderColor;
+        // [4] title text (lock the color so it does not turn white when the mouse is over it)
+        LockColor(titleStyle, borderColor);
         GUI.Label(new Rect(x, y + 25, boxW, 80), title, titleStyle);
 
         // [5] restart button

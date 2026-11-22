@@ -62,7 +62,7 @@ public class CraftingSystem : MonoBehaviour
         }
 
         // [2] cheat key for the demo video (same amounts as the real drops)
-        if (kb.f1Key.wasPressedThisFrame)
+        if (DevKeys.Enabled && kb.f1Key.wasPressedThisFrame)
         {
             player.Pickup("Bone", 3);
             player.Pickup("Hide", 7);
