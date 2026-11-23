@@ -191,7 +191,7 @@ Transform:
   m_GameObject: {fileID: 19787827}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 1.0207801, y: 7.2057695, z: 0}
+  m_LocalPosition: {x: 1.02, y: 6.71, z: 0}
   m_LocalScale: {x: 1, y: 26.365608, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -263,7 +263,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: -5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -285,8 +285,8 @@ Transform:
   m_GameObject: {fileID: 67162753}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.25, y: 4.43, z: 0}
-  m_LocalScale: {x: 1.2, y: 2.5, z: 1}
+  m_LocalPosition: {x: 10.76, y: 3.73, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -305,6 +305,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Door
   isOpen: 0
   requiredEquipment: 4
+  closedSprite: {fileID: 5143072091549839320, guid: 4c38f8b80b0ea6541be1d6097fe62032, type: 3}
+  openSprite: {fileID: 4856990145134343996, guid: 35ddf6373b6732442bedbf78c24e03f2, type: 3}
 --- !u!61 &67162757
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -339,7 +341,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.030985355, y: 0.06971657}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -349,7 +351,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.8056135, y: 2.0999725}
   m_EdgeRadius: 0
 --- !u!1 &92504565
 GameObject:
@@ -382,29 +384,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryUI
   icons:
   - itemName: Bone
-    icon: {fileID: 0}
+    icon: {fileID: 4056058344551517612, guid: 25351d2df9048e14eaf777550f3c4c2a, type: 3}
   - itemName: Hide
-    icon: {fileID: 0}
+    icon: {fileID: -5409552257397737557, guid: a14da5f5a93940c4489c0dd8e52e6713, type: 3}
   - itemName: Slime Gel
-    icon: {fileID: 0}
+    icon: {fileID: -7647868525326460276, guid: 99020ca8d34a62b4a9855490746ddb4d, type: 3}
   - itemName: Cotton
-    icon: {fileID: 0}
+    icon: {fileID: 3370835481429039019, guid: 52b47d2f9cbcb1f4ba83b58368f4af96, type: 3}
   - itemName: Iron Ore
-    icon: {fileID: 0}
+    icon: {fileID: -4866586045122100964, guid: ba6a4a3d059601b4090424008e589779, type: 3}
   - itemName: Iron Plate
-    icon: {fileID: 0}
+    icon: {fileID: 1208040086343421634, guid: c09a495fa17e4be45be39a0690610615, type: 3}
   - itemName: Cloth
-    icon: {fileID: 0}
+    icon: {fileID: -7775649970217235406, guid: b9bacebeb3207c64c8c2a455fe9812a4, type: 3}
   - itemName: Sword Handle
-    icon: {fileID: 0}
+    icon: {fileID: 8492620618154952935, guid: f8dbab29d3a4477498248ea10b84ac73, type: 3}
   - itemName: Sword
-    icon: {fileID: 0}
+    icon: {fileID: 712035800519618848, guid: 9b41db60dc3eaf04991c68ea57edbef7, type: 3}
   - itemName: Chestplate
-    icon: {fileID: 0}
+    icon: {fileID: -7308674868924902590, guid: 6128b87dbe946934db1283ca07b57164, type: 3}
   - itemName: Leggings
-    icon: {fileID: 0}
+    icon: {fileID: 4300218101569691350, guid: 1eddf305596e1ed4ab9a57222cc10165, type: 3}
   - itemName: Helmet
-    icon: {fileID: 0}
+    icon: {fileID: 309628545801974608, guid: 363ee631dd40c2b4682637952ec8e395, type: 3}
   isOpen: 0
 --- !u!4 &92504567
 Transform:
@@ -712,7 +714,7 @@ Transform:
   m_GameObject: {fileID: 383001035}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 1.0207801, y: -5.76423, z: 0}
+  m_LocalPosition: {x: 1.02, y: -5.25, z: 0}
   m_LocalScale: {x: 1, y: 26.365608, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1200,7 +1202,7 @@ Transform:
   m_GameObject: {fileID: 1237789227}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.40922, y: 0.70577, z: 0}
+  m_LocalPosition: {x: -12.12, y: 0.70577, z: 0}
   m_LocalScale: {x: 1, y: 12.192188, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1278,7 +1280,7 @@ Transform:
   m_GameObject: {fileID: 1362561460}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 14.51078, y: 0.70577, z: 0}
+  m_LocalPosition: {x: 14.24, y: 0.70577, z: 0}
   m_LocalScale: {x: 1, y: 12.192188, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

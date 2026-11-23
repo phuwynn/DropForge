@@ -4,6 +4,8 @@ public class Door : MonoBehaviour
 {
     public bool isOpen = false;
     public int requiredEquipment = 4;
+    public Sprite closedSprite;
+    public Sprite openSprite;
 
     WaveManager waveManager;
     SpriteRenderer sr;
@@ -19,7 +21,7 @@ public class Door : MonoBehaviour
         SetOpen(false);
     }
 
-    // open = green door, closed = gray door
+    // open = glowing cave door, closed = normal cave door
     public void SetOpen(bool open)
     {
         isOpen = open;
@@ -28,8 +30,27 @@ public class Door : MonoBehaviour
         {
             sr = GetComponent<SpriteRenderer>();
         }
-        if (sr != null)
+        if (sr == null)
         {
+            return;
+        }
+
+        // [1] have both pictures = swap the picture
+        if (closedSprite != null && openSprite != null)
+        {
+            if (open)
+            {
+                sr.sprite = openSprite;
+            }
+            else
+            {
+                sr.sprite = closedSprite;
+            }
+            sr.color = Color.white;
+        }
+        else
+        {
+            // [2] no pictures yet = gray color when closed, green when open
             if (open)
             {
                 sr.color = new Color(0.4f, 1f, 0.4f);

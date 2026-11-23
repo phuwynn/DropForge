@@ -9,6 +9,7 @@ public class CraftingSystem : MonoBehaviour
 
     Player player;
     Recipe craftRequest = null;
+    InventoryUI inventoryUI;
 
     GUIStyle titleStyle;
     GUIStyle normalStyle;
@@ -19,6 +20,7 @@ public class CraftingSystem : MonoBehaviour
     void Start()
     {
         player = FindFirstObjectByType<Player>();
+        inventoryUI = FindFirstObjectByType<InventoryUI>();
 
         // step 1: raw materials -> components
         recipes.Add(new Recipe("Iron Plate", new string[] { "Iron Ore" }, new int[] { 2 }));
@@ -69,19 +71,6 @@ public class CraftingSystem : MonoBehaviour
             player.Pickup("Slime Gel", 5);
             player.Pickup("Cotton", 10);
             player.Pickup("Iron Ore", 14);
-        }
-
-        // [3] menu is open: keys 1-7 craft the recipe with that number
-        if (isOpen)
-        {
-            Key[] numberKeys = { Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4, Key.Digit5, Key.Digit6, Key.Digit7 };
-            for (int i = 0; i < numberKeys.Length && i < recipes.Count; i++)
-            {
-                if (kb[numberKeys[i]].wasPressedThisFrame)
-                {
-                    craftRequest = recipes[i];
-                }
-            }
         }
 
         // [4] do the craft request (the button in OnGUI only sets craftRequest)
@@ -235,7 +224,7 @@ public class CraftingSystem : MonoBehaviour
 
         // [3] title
         GUI.Label(new Rect(x0 + 20, y0 + 10, 600, 36), "CRAFTING", titleStyle);
-        GUI.Label(new Rect(x0 + 20, y0 + 46, 860, 24), "Can craft now: " + GetCraftable().Count + "     (press C to close, or press the number key to craft)", grayStyle);
+        GUI.Label(new Rect(x0 + 20, y0 + 46, 860, 24), "Can craft now: " + GetCraftable().Count + "     (press C to close)", grayStyle);
 
         float y = y0 + 80;
         float rowHeight = 42;
@@ -279,8 +268,23 @@ public class CraftingSystem : MonoBehaviour
         // line on top of the row
         DrawRect(new Rect(x0 + 10, y, 880, 1), new Color(1, 1, 1, 0.3f));
 
+        // icon in front of the name (a picture, or a color box if there is no picture yet)
+        Rect iconRect = new Rect(x0 + 20, y + 5, 32, 32);
+        if (inventoryUI != null)
+        {
+            Sprite sprite = inventoryUI.GetIcon(r.resultName);
+            if (sprite != null)
+            {
+                inventoryUI.DrawSprite(iconRect, sprite);
+            }
+            else
+            {
+                DrawRect(iconRect, inventoryUI.GetTypeColor(r.result));
+            }
+        }
+
         // name
-        GUI.Label(new Rect(x0 + 20, y, 160, 42), (number + 1) + ". " + r.resultName, normalStyle);
+        GUI.Label(new Rect(x0 + 58, y, 125, 42), r.resultName, normalStyle);
 
         // bonus
         string bonusText = "";

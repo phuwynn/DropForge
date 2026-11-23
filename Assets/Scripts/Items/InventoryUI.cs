@@ -70,7 +70,7 @@ public class InventoryUI : MonoBehaviour
     }
 
     // sequential search: find the picture of an item by name, null = no picture yet
-    Sprite GetIcon(string itemName)
+    public Sprite GetIcon(string itemName)
     {
         for (int i = 0; i < icons.Count; i++)
         {
@@ -157,7 +157,7 @@ public class InventoryUI : MonoBehaviour
     }
 
     // draw a sprite and keep its ratio (not stretched)
-    void DrawSprite(Rect rect, Sprite sprite)
+    public void DrawSprite(Rect rect, Sprite sprite)
     {
         Texture2D tex = sprite.texture;
         Rect r = sprite.textureRect;
@@ -180,7 +180,7 @@ public class InventoryUI : MonoBehaviour
     }
 
     // color of the temporary box (used when an item has no picture yet)
-    Color GetTypeColor(Item item)
+    public Color GetTypeColor(Item item)
     {
         string type = item.GetTypeName();
         if (type == "Material")

@@ -188,6 +188,12 @@ public class Player : MonoBehaviour
     // HUD: HP, DEF, ATK bars at the top-left of the screen
     void OnGUI()
     {
+        // game is paused (a menu is open) = hide the HUD so it does not cover the menu
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+
         // draw behind the menus
         GUI.depth = 1;
 
@@ -206,15 +212,11 @@ public class Player : MonoBehaviour
         }
 
         // [2] the three bars
-        DrawBar(10, 10, "HP", hp, maxHp, new Color(0.85f, 0.15f, 0.15f));
+        DrawBar(10, 10, "HP", hp, maxHp, new Color(0.2f, 0.75f, 0.25f));
         DrawBar(10, 38, "DEF", def, maxDef, new Color(0.2f, 0.5f, 0.9f));
         DrawBar(10, 66, "ATK", atk, maxAtk, new Color(0.95f, 0.6f, 0.1f));
 
-        // [3] last hit text: only in the editor (it is a test tool, not for players)
-        if (DevKeys.Enabled && lastHitText != "")
-        {
-            GUI.Label(new Rect(10, 98, 600, 28), lastHitText, hudTextStyle);
-        }
+        
     }
 
     void DrawBar(float x, float y, string label, int value, int maxValue, Color color)
