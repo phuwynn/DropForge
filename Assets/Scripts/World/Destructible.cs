@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,8 +13,10 @@ public class Destructible : MonoBehaviour
     int maxHp;
     Camera cam;
     Collider2D col;
+    protected bool IsDead { get; private set; }
+    protected virtual float DestructionDelay => 0f;
 
-    void Awake()
+    protected virtual void Awake()
     {
         // remember the starting hp so we can draw the bar
         maxHp = hp;
@@ -23,6 +26,7 @@ public class Destructible : MonoBehaviour
 
     public void TakeDamage(int attackerAtk)
     {
+        if (IsDead) return;
         // [1] damage = attacker atk - our def, at least 1
         int damage = attackerAtk - def;
         if (damage < 1)
@@ -39,11 +43,20 @@ public class Destructible : MonoBehaviour
         {
             Die();
         }
+        else
+        {
+            OnDamaged();
+        }
     }
+
+    protected virtual void OnDamaged() { }
 
     // virtual = the child class can override (rewrite) this method
     public virtual void Die()
     {
+        if (IsDead) return;
+        IsDead = true;
+        hp = 0;
         // [1] roll the drop table to see what we drop
         List<DropEntry> drops = dropTable.Roll();
 
@@ -60,12 +73,23 @@ public class Destructible : MonoBehaviour
         }
 
         // [3] remove this object
+        if (DestructionDelay > 0)
+            StartCoroutine(RemoveAfterAnimation());
+        else
+            Destroy(gameObject);
+    }
+
+    IEnumerator RemoveAfterAnimation()
+    {
+        // The final kill pauses gameplay, but the corpse should still disappear.
+        yield return new WaitForSecondsRealtime(DestructionDelay);
         Destroy(gameObject);
     }
 
     // draw the hp bar above the head (temporary UI)
     void OnGUI()
     {
+        if (IsDead) return;
         // only draw once per frame, and hide the bar while the game is paused
         if (Event.current.type != EventType.Repaint)
         {
