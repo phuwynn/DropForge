@@ -8,9 +8,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 994131870851953997, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3015093066859370924, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3776593236670409485, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4402009661728301313, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4971850990791028953, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5373414145543244546, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
       propertyPath: m_Name
-      value: skull Variant
+      value: Skeleton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5373414145543244546, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6510562832996717409, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -52,6 +76,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7043532331137460070, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -65,6 +93,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5373414145543244546, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6555542374920962470}
+    - targetCorrespondingSourceObject: {fileID: 5373414145543244546, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4820613816594619201}
   m_SourcePrefab: {fileID: 100100000, guid: 066d65920abe64af18cd5b9a84c036a5, type: 3}
 --- !u!1 &509168457320123434 stripped
 GameObject:
@@ -155,7 +186,30 @@ MonoBehaviour:
       amount: 1
       chance: 100
   pickupPrefab: {fileID: 3990546141863274945, guid: a64f85d837a8904428198a58ee4bab92, type: 3}
+  barWidth: 44
   atk: 1
   moveSpeed: 2
   attackRange: 1.2
   attackCooldown: 1
+--- !u!95 &4820613816594619201
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 509168457320123434}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc893adb3b6fe8a4cb7d896137986a5f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage:
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

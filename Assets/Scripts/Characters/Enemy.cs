@@ -9,23 +9,41 @@ public class Enemy : Destructible
 
     Player player;
     Rigidbody2D rb;
+    Animator animator;
+    Collider2D bodyCollider;
+    Collider2D playerCollider;
+    float facingScale;
+    static readonly int Moving = Animator.StringToHash("Moving");
+    static readonly int AttackAnimation = Animator.StringToHash("Attack");
+    static readonly int HurtAnimation = Animator.StringToHash("Hurt");
+    static readonly int Dead = Animator.StringToHash("Dead");
+    protected override float DestructionDelay => animator != null && animator.runtimeAnimatorController != null ? 0.65f : 0f;
     float attackTimer = 0;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        bodyCollider = GetComponent<Collider2D>();
+        facingScale = Mathf.Abs(transform.localScale.x);
+    }
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         player = FindFirstObjectByType<Player>();
+        if (player != null) playerCollider = player.GetComponent<Collider2D>();
     }
 
     void Update()
     {
         // game is paused (crafting menu is open) = do nothing
-        if (Time.timeScale == 0)
+        if (Time.timeScale == 0 || IsDead)
         {
             return;
         }
 
-        if (player == null)
+        if (player == null || player.hp <= 0)
         {
             return;
         }
@@ -37,9 +55,23 @@ public class Enemy : Destructible
         }
 
         // [2] close enough and the timer is finished = attack the player
-        float distance = Vector2.Distance(transform.position, player.transform.position);
-        if (distance <= attackRange && attackTimer <= 0)
+        bool inRange = IsInAttackRange();
+        if (animator != null) animator.SetBool(Moving, !inRange);
+        float horizontal = player.transform.position.x - transform.position.x;
+        if (Mathf.Abs(horizontal) > 0.05f)
         {
+            // The source monster artwork faces right.
+            Vector3 scale = transform.localScale;
+            scale.x = horizontal > 0 ? facingScale : -facingScale;
+            transform.localScale = scale;
+        }
+        if (inRange && attackTimer <= 0)
+        {
+            if (animator != null)
+            {
+                animator.ResetTrigger(HurtAnimation);
+                animator.SetTrigger(AttackAnimation);
+            }
             player.TakeDamage(atk);
             attackTimer = attackCooldown;
         }
@@ -47,14 +79,14 @@ public class Enemy : Destructible
 
     void FixedUpdate()
     {
-        if (player == null)
+        if (IsDead || player == null || player.hp <= 0)
         {
+            if (rb != null) rb.linearVelocity = Vector2.zero;
             return;
         }
 
         // [1] far from the player = walk toward the player
-        float distance = Vector2.Distance(transform.position, player.transform.position);
-        if (distance > attackRange)
+        if (!IsInAttackRange())
         {
             Vector2 direction = (player.transform.position - transform.position).normalized;
             rb.linearVelocity = direction * moveSpeed;
@@ -66,17 +98,44 @@ public class Enemy : Destructible
         }
     }
 
-        // override = rewrite Die() from Destructible
+    bool IsInAttackRange()
+    {
+        if (Vector2.Distance(transform.position, player.transform.position) <= attackRange) return true;
+        // Large monsters can touch the player while their origin is still outside attackRange.
+        return bodyCollider != null && playerCollider != null &&
+            bodyCollider.Distance(playerCollider).distance <= 0.05f;
+    }
+
+    protected override void OnDamaged()
+    {
+        if (animator == null) return;
+        animator.ResetTrigger(AttackAnimation);
+        animator.SetTrigger(HurtAnimation);
+    }
+
+    // Stop gameplay immediately, then let the death animation finish.
     public override void Die()
     {
+        if (IsDead) return;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.simulated = false;
+        }
+        foreach (var collider in GetComponentsInChildren<Collider2D>()) collider.enabled = false;
+        if (animator != null)
+        {
+            animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+            animator.ResetTrigger(AttackAnimation);
+            animator.ResetTrigger(HurtAnimation);
+            animator.SetBool(Dead, true);
+        }
+        base.Die();
         // [1] tell WaveManager that one enemy is dead
         WaveManager waveManager = FindFirstObjectByType<WaveManager>();
         if (waveManager != null)
         {
             waveManager.OnEnemyDied();
         }
-
-        // [2] do the normal Die() from the parent class (destroy this object)
-        base.Die();
     }
 }
