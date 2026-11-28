@@ -8,6 +8,7 @@ public class Door : MonoBehaviour
     public Sprite openSprite;
 
     WaveManager waveManager;
+    AudioManager audioManager;
     SpriteRenderer sr;
     bool showWarning = false;
 
@@ -18,13 +19,21 @@ public class Door : MonoBehaviour
     void Start()
     {
         waveManager = FindFirstObjectByType<WaveManager>();
+        audioManager = FindFirstObjectByType<AudioManager>();
         SetOpen(false);
     }
 
     // open = glowing cave door, closed = normal cave door
     public void SetOpen(bool open)
     {
+        bool wasOpen = isOpen;
         isOpen = open;
+
+        // closed -> open: play the door open sound
+        if (open && wasOpen == false && audioManager != null)
+        {
+            audioManager.PlayDoorOpen();
+        }
 
         if (sr == null)
         {
@@ -83,6 +92,10 @@ public class Door : MonoBehaviour
         {
             showWarning = true;
             Time.timeScale = 0; // pause the game while the box is open
+            if (audioManager != null)
+            {
+                audioManager.PlayWarning();
+            }
         }
         else
         {
@@ -94,6 +107,11 @@ public class Door : MonoBehaviour
     {
         showWarning = false;
         Time.timeScale = 1;
+
+        if (audioManager != null)
+        {
+            audioManager.PlayWarp();
+        }
 
         if (waveManager != null)
         {
@@ -173,9 +191,17 @@ public class Door : MonoBehaviour
         {
             showWarning = false;
             Time.timeScale = 1;
+            if (audioManager != null)
+            {
+                audioManager.PlayClick();
+            }
         }
         if (GUI.Button(new Rect(x + boxW - 240, y + 195, 200, 55), "Go anyway", buttonStyle))
         {
+            if (audioManager != null)
+            {
+                audioManager.PlayClick();
+            }
             EnterNextWave();
         }
     }

@@ -521,6 +521,7 @@ MonoBehaviour:
   maxDef: 24
   attackRange: 1.5
   attackCooldown: 0.5
+  stepInterval: 0.3
   inventory:
     slots: []
   equippedItems: []
@@ -1330,6 +1331,70 @@ Transform:
   m_Children: []
   m_Father: {fileID: 134303837}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1811938578
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1811938580}
+  - component: {fileID: 1811938579}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1811938579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811938578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc99528820d6ed340b7c41415599ae63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  musicClip: {fileID: 8300000, guid: cb890d13a18b3764ea3cc76d66a6ef74, type: 3}
+  attackClip: {fileID: 8300000, guid: da1bb23a03e8d4844848f00f44787ff0, type: 3}
+  hurtClip: {fileID: 8300000, guid: eec8d6d6a10059f4dbe81bb26943db53, type: 3}
+  stepClip: {fileID: 8300000, guid: ad9b6cb2733756e4680a58011b6c944d, type: 3}
+  loseClip: {fileID: 8300000, guid: 0197a4b09b52749489f8e3d6364b53ac, type: 3}
+  winClip: {fileID: 8300000, guid: 7bb6d47502dbc3e4eb5886347e4eb61b, type: 3}
+  enemyDieClip: {fileID: 8300000, guid: 4d824b8cf8367f649af4dda4ad371c00, type: 3}
+  bossDieClip: {fileID: 8300000, guid: 4d824b8cf8367f649af4dda4ad371c00, type: 3}
+  oreBreakClip: {fileID: 8300000, guid: 7dfa51e8b65ef6645a30fed7e8bf8015, type: 3}
+  cottonBreakClip: {fileID: 8300000, guid: 7dfa51e8b65ef6645a30fed7e8bf8015, type: 3}
+  menuOpenClip: {fileID: 8300000, guid: 9c7b06f5d5945e047b5ec6eada699e60, type: 3}
+  menuCloseClip: {fileID: 8300000, guid: 9c7b06f5d5945e047b5ec6eada699e60, type: 3}
+  craftClip: {fileID: 8300000, guid: 4c78d2ed31ddf3e48a2f330fbb979d98, type: 3}
+  warningClip: {fileID: 8300000, guid: 02272789fe92051468eb359e03d1fd07, type: 3}
+  clickClip: {fileID: 8300000, guid: 909248f4efa435d4cb4c9f51e345ea26, type: 3}
+  warpClip: {fileID: 8300000, guid: 1a578a7b02e279e4d8b77f5cbf1dff13, type: 3}
+  doorOpenClip: {fileID: 8300000, guid: a80a50d28e7a16b4bb479674950920bc, type: 3}
+  musicVolume: 0.4
+  sfxVolume: 0.8
+  stepVolume: 0.5
+--- !u!4 &1811938580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811938578}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.12134, y: -2.2642, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1834250497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,7 +1406,7 @@ GameObject:
   - component: {fileID: 1834250499}
   - component: {fileID: 1834250498}
   m_Layer: 0
-  m_Name: forest-arena-background-v4
+  m_Name: MapBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1436,3 +1501,4 @@ SceneRoots:
   - {fileID: 67162755}
   - {fileID: 92504567}
   - {fileID: 1834250499}
+  - {fileID: 1811938580}

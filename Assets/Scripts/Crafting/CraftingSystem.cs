@@ -10,6 +10,7 @@ public class CraftingSystem : MonoBehaviour
     Player player;
     Recipe craftRequest = null;
     InventoryUI inventoryUI;
+    AudioManager audioManager;
 
     GUIStyle titleStyle;
     GUIStyle normalStyle;
@@ -21,6 +22,7 @@ public class CraftingSystem : MonoBehaviour
     {
         player = FindFirstObjectByType<Player>();
         inventoryUI = FindFirstObjectByType<InventoryUI>();
+        audioManager = FindFirstObjectByType<AudioManager>();
 
         // step 1: raw materials -> components
         recipes.Add(new Recipe("Iron Plate", new string[] { "Iron Ore" }, new int[] { 2 }));
@@ -85,12 +87,20 @@ public class CraftingSystem : MonoBehaviour
     {
         isOpen = true;
         Time.timeScale = 0; // pause the game
+        if (audioManager != null)
+        {
+            audioManager.PlayMenuOpen();
+        }
     }
 
     void CloseMenu()
     {
         isOpen = false;
         Time.timeScale = 1;
+        if (audioManager != null)
+        {
+            audioManager.PlayMenuClose();
+        }
     }
 
     // return the recipes that the player can craft right now
@@ -139,6 +149,12 @@ public class CraftingSystem : MonoBehaviour
         else
         {
             player.inventory.Add(recipe.result, 1);
+        }
+
+        // craft success sound
+        if (audioManager != null)
+        {
+            audioManager.PlayCraft();
         }
         return true;
     }

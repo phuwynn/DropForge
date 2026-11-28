@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public int maxDef = 24;
     public float attackRange = 1.5f;
     public float attackCooldown = 0.5f;
+    public float stepInterval = 0.3f; // seconds between two footsteps
     public Inventory inventory = new Inventory();
     public List<string> equippedItems = new List<string>();
     public string lastHitText = "";
@@ -20,12 +21,14 @@ public class Player : MonoBehaviour
     Rigidbody2D rb;
     Animator animator;
     SpriteRenderer spriteRenderer;
+    AudioManager audioManager;
     static readonly int Moving = Animator.StringToHash("Moving");
     static readonly int AttackAnimation = Animator.StringToHash("Attack");
     static readonly int HurtAnimation = Animator.StringToHash("Hurt");
     static readonly int Dead = Animator.StringToHash("Dead");
     Vector2 moveInput;
     float attackTimer = 0;
+    float stepTimer = 0;
     readonly List<RaycastHit2D> movementHits = new List<RaycastHit2D>();
     const float CollisionSkin = 0.02f;
 
@@ -40,6 +43,16 @@ public class Player : MonoBehaviour
         rb.useFullKinematicContacts = true;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioManager = FindFirstObjectByType<AudioManager>();
+    }
+
+    void Start()
+    {
+        // try again here in case the AudioManager was not found in Awake
+        if (audioManager == null)
+        {
+            audioManager = FindFirstObjectByType<AudioManager>();
+        }
     }
 
     void Update()
@@ -47,6 +60,7 @@ public class Player : MonoBehaviour
         // game is paused (menu, bag, door box, win or lose) = do nothing
         if (Time.timeScale == 0 || hp <= 0)
         {
+            StopStepSound();
             return;
         }
 
@@ -85,6 +99,8 @@ public class Player : MonoBehaviour
 
         // [2] make diagonal speed the same as straight speed
         moveInput = new Vector2(x, y).normalized;
+
+        // [2.5] walking animation and turning the sprite (before the sound, so a sound problem can never stop it)
         if (animator != null)
         {
             animator.SetBool(Moving, moveInput.sqrMagnitude > 0);
@@ -107,6 +123,43 @@ public class Player : MonoBehaviour
             Attack();
             attackTimer = attackCooldown;
         }
+
+        // [5] walking sound (last)
+        UpdateStepSound();
+    }
+
+    // walking sound: play one step every stepInterval seconds while we are moving
+    void UpdateStepSound()
+    {
+        if (audioManager == null)
+        {
+            return;
+        }
+
+        if (moveInput != Vector2.zero)
+        {
+            stepTimer = stepTimer - Time.deltaTime;
+            if (stepTimer <= 0)
+            {
+                audioManager.PlayStep();
+                stepTimer = stepInterval;
+            }
+        }
+        else
+        {
+            // standing still: cut the footstep sound at once and reset the timer
+            audioManager.StopStep();
+            stepTimer = 0;
+        }
+    }
+
+    void StopStepSound()
+    {
+        if (audioManager != null)
+        {
+            audioManager.StopStep();
+        }
+        stepTimer = 0;
     }
 
     void FixedUpdate()
@@ -161,6 +214,13 @@ public class Player : MonoBehaviour
             animator.ResetTrigger(HurtAnimation);
             animator.SetTrigger(AttackAnimation);
         }
+
+        // play the sword swing sound
+        if (audioManager != null)
+        {
+            audioManager.PlayAttack();
+        }
+
         // [1] find all colliders inside the attack range
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, attackRange);
 
@@ -195,6 +255,12 @@ public class Player : MonoBehaviour
         // [3] remember the last hit (only shown in the editor)
         lastHitText = "Last hit: enemy ATK " + enemyAtk + " - DEF " + def + " = " + damage;
         Debug.Log(lastHitText + " | HP = " + hp);
+
+        // [3.5] play the hurt sound (when we die, the lose sound plays instead)
+        if (hp > 0 && audioManager != null)
+        {
+            audioManager.PlayHurt();
+        }
 
         // [4] hp is 0 = tell GameManager that we lost
         if (hp == 0)
@@ -297,8 +363,6 @@ public class Player : MonoBehaviour
         DrawBar(10, 10, "HP", hp, maxHp, new Color(0.2f, 0.75f, 0.25f));
         DrawBar(10, 38, "DEF", def, maxDef, new Color(0.2f, 0.5f, 0.9f));
         DrawBar(10, 66, "ATK", atk, maxAtk, new Color(0.95f, 0.6f, 0.1f));
-
-        
     }
 
     void DrawBar(float x, float y, string label, int value, int maxValue, Color color)

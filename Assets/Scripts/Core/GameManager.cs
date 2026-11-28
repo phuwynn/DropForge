@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     GUIStyle titleStyle;
     GUIStyle buttonStyle;
+    bool restarting = false;
 
     void Start()
     {
@@ -49,6 +51,11 @@ public class GameManager : MonoBehaviour
         state = GameState.Won;
         Time.timeScale = 0; // pause the game
         Debug.Log("You win");
+        AudioManager am = FindFirstObjectByType<AudioManager>();
+        if (am != null)
+        {
+            am.PlayWin();
+        }
     }
 
     public void Lose()
@@ -62,11 +69,39 @@ public class GameManager : MonoBehaviour
         state = GameState.Lost;
         Time.timeScale = 0; // pause the game
         Debug.Log("You lose");
+        AudioManager am = FindFirstObjectByType<AudioManager>();
+        if (am != null)
+        {
+            am.PlayLose();
+        }
     }
 
     public void Restart()
     {
-        // [1] unpause, then [2] load the same scene again (everything starts from wave 1)
+        // already restarting = ignore extra clicks
+        if (restarting)
+        {
+            return;
+        }
+        restarting = true;
+
+        // [1] play the click sound
+        AudioManager am = FindFirstObjectByType<AudioManager>();
+        if (am != null)
+        {
+            am.PlayClick();
+        }
+
+        // [2] wait a moment, then load the scene (the scene load destroys the AudioManager and cuts the sound)
+        StartCoroutine(RestartAfterDelay());
+    }
+
+    IEnumerator RestartAfterDelay()
+    {
+        // WaitForSecondsRealtime still works when Time.timeScale is 0
+        yield return new WaitForSecondsRealtime(0.25f);
+
+        // unpause, then load the same scene again (everything starts from wave 1)
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

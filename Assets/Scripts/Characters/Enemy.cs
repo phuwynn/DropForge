@@ -113,29 +113,30 @@ public class Enemy : Destructible
         animator.SetTrigger(HurtAnimation);
     }
 
-    // Stop gameplay immediately, then let the death animation finish.
+    // the child class (Boss) can override this to play its own sound
+    protected virtual void PlayDeathSound()
+    {
+        AudioManager am = FindFirstObjectByType<AudioManager>();
+        if (am != null)
+        {
+            am.PlayEnemyDie();
+        }
+    }
+
+    // override = rewrite Die() from Destructible
     public override void Die()
     {
-        if (IsDead) return;
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.simulated = false;
-        }
-        foreach (var collider in GetComponentsInChildren<Collider2D>()) collider.enabled = false;
-        if (animator != null)
-        {
-            animator.updateMode = AnimatorUpdateMode.UnscaledTime;
-            animator.ResetTrigger(AttackAnimation);
-            animator.ResetTrigger(HurtAnimation);
-            animator.SetBool(Dead, true);
-        }
-        base.Die();
-        // [1] tell WaveManager that one enemy is dead
+        // [1] play the death sound
+        PlayDeathSound();
+
+        // [2] tell WaveManager that one enemy is dead
         WaveManager waveManager = FindFirstObjectByType<WaveManager>();
         if (waveManager != null)
         {
             waveManager.OnEnemyDied();
         }
+
+        // [3] do the normal Die() from the parent class (drop items and destroy this object)
+        base.Die();
     }
 }

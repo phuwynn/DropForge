@@ -16,7 +16,7 @@ public class InventoryUI : MonoBehaviour
     public bool isOpen = false;
 
     Player player;
-
+    AudioManager audioManager;
     GUIStyle titleStyle;
     GUIStyle sectionStyle;
     GUIStyle nameStyle;
@@ -27,6 +27,7 @@ public class InventoryUI : MonoBehaviour
     void Start()
     {
         player = FindFirstObjectByType<Player>();
+        audioManager = FindFirstObjectByType<AudioManager>();
     }
 
     void Update()
@@ -61,12 +62,20 @@ public class InventoryUI : MonoBehaviour
     {
         isOpen = true;
         Time.timeScale = 0; // pause the game
+        if (audioManager != null)
+        {
+            audioManager.PlayMenuOpen();
+        }
     }
 
     void CloseBag()
     {
         isOpen = false;
         Time.timeScale = 1;
+        if (audioManager != null)
+        {
+            audioManager.PlayMenuClose();
+        }
     }
 
     // sequential search: find the picture of an item by name, null = no picture yet
